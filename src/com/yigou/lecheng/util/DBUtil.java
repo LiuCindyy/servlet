@@ -15,7 +15,7 @@ public class DBUtil {
 	private static final String SQL = null;
 
 	/**
-	 * Êı¾İ¿âÁ¬½ÓÎÄ¼ş
+	 * ï¿½ï¿½ï¿½İ¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½
 	 * 
 	 * @throws ClassNotFoundException
 	 * @throws SQLException
@@ -31,7 +31,8 @@ public class DBUtil {
 		List<Map<String, String>> list = new ArrayList<Map<String, String>>();
 
 		conn = this.getConn();
-		//Õâ¸öµØ·½¸Õ²ÅÄãµ¼ÈëµÄ°üµ¼Èë´íÁËjava.sql.PreparedStatement ÊÇÕâ¸ö°üÏÂÃæµÄ Äãµ¼ÈëµÄ²»ÊÇÕâ¸ö ËùÒÔ²»ĞĞ ºÃÁË 
+	
+		
 		ps = conn.prepareStatement(SQl);
 
 		if (obj != null) {
@@ -43,10 +44,10 @@ public class DBUtil {
 		rs = ps.executeQuery();
 		rsmd = rs.getMetaData();
 		while (rs.next()) {
-			Map<String, String> m = new HashMap<>();
-			for (int i = 1; i < rsmd.getColumnCount(); i++) {
-				//Õâ¸öµØ·½Ğ´µÄÓĞÎÊÌâ£¬Õâ¸önameÓ¦¸ÃÊÇÕÅÈı
-				m.put(rsmd.getColumnName(i), rs.getString(i));
+			Map<String, String> m = new HashMap<String, String>();
+			for (int i = 0; i < rsmd.getColumnCount(); i++) {
+			
+				m.put(rsmd.getColumnName(i+1), rs.getString(i+1));
 				
 			}
 			list.add(m);
@@ -55,52 +56,73 @@ public class DBUtil {
 		return list;
 
 	}
+	
+	public int exeUpdate (String sql, Object[] obj) throws SQLException {
+		Connection conn = this.getConn();
+		PreparedStatement ps = conn.prepareStatement(sql);
+		int rs;
+		if (obj!=null) {
+			for(int i=0;i<obj.length;i++) {
+	//å°†é—®å·ä¸è¦æŸ¥è¯¢çš„åˆ—åå¯¹åº”
+				ps.setObject(i+1,obj[i]);
+			}
+		}
+		rs=ps.executeUpdate();
+		
+		System.out.println(rs);
+		return rs;
+	}
 
-	// µ¼ÈëÊı¾İ¿âÇı¶¯
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½İ¿ï¿½ï¿½ï¿½ï¿½ï¿½
 	public Connection getConn() {
 		Connection conn = null;
 
 		try {
-			// 1.µ¼ÈëÊı¾İ¿âÇı¶¯
+			// 1.ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½İ¿ï¿½ï¿½ï¿½ï¿½ï¿½
 			Class.forName("com.mysql.jdbc.Driver");
-			// 2.»ñÈ¡Êı¾İ¿âÁ¬½Ó
+			// 2.ï¿½ï¿½È¡ï¿½ï¿½ï¿½İ¿ï¿½ï¿½ï¿½ï¿½ï¿½
 			conn =  DriverManager.getConnection(
-					"jdbc:mysql://localhost:3306/test", "root", "");
-			// ´´½¨´¦Àí¶ÔÏó
+					"jdbc:mysql://localhost:3306/test", "root", "root");
+			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			// Statement st = conn.createStatement();
 
 			// int se =
 			// st.executeUpdate("insert into login(name,password) values('niha',12345678)");
 			// st.executeUpdate("insert into login(name,password) values('wanger',87654321)");
 
-			// Ö´ĞĞSQLÓï¾ä ²åÈë
+			// Ö´ï¿½ï¿½SQLï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
-			// Ö´ĞĞSQLÓï¾ä ²éÑ¯
-			// ResultSet
-			// flag=st.executeQuery("select * from stu where name=zhangsan");
-
+			// Ö´ï¿½ï¿½SQLï¿½ï¿½ï¿½ ï¿½ï¿½Ñ¯
+		
 		} catch (SQLException e) {
-			System.out.println("Êı¾İ¿âÁ¬½ÓÊ§°Ü");
+			System.out.println("ï¿½ï¿½ï¿½İ¿ï¿½ï¿½ï¿½ï¿½ï¿½Ê§ï¿½ï¿½");
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
 
-			System.out.println("Çı¶¯¼ÓÔØÊ§°Ü");
+			System.out.println("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê§ï¿½ï¿½");
 			e.printStackTrace();
 		}
 		return conn;
 	}
 
-//	public static void main(String args[]) throws SQLException {
-//		DBUtil db = new DBUtil();
-
-//		Object[] obj = { ,111111 };
-//		String sql = "select * from login where username = ? and password = ?";
-//		List<Map<String, String>> resultList = db.exeQury(sql, obj);
-//		for (Map<String, String> map : resultList) {
-//			for (String key : map.keySet()) {
-				
-//				System.out.println(map.get(key));
-//			}
-//	}
-//	}
+	public static void main(String args[]) throws SQLException {
+		DBUtil db = new DBUtil();
+		Object[] obj = { "w",12345678 };
+		String sql = "Select * from login where username = ? and password = ?";
+//		db.exeUpdate(sql, obj);
+			
+		List<Map<String, String>> resultList =null;
+		resultList = db.exeQury(sql, obj);	
+		
+		for (int i=0; i<resultList.size();i++) {
+			
+			Map<String,String> map  = new HashMap<String, String>();
+			map = resultList.get(i);
+				for (String key : map.keySet()) {	
+				System.out.println(key);
+				System.out.println(map.get(key));
+					}
+		}
+	}
+	
 }
